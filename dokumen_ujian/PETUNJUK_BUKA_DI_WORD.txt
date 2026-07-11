@@ -1,0 +1,31 @@
+========================================================================
+PETUNJUK PENTING: CARA MEMBUKA & MENYIMPAN FILE KE FORMAT WORD (.DOCX)
+========================================================================
+
+Halo! File-file di dalam folder ini:
+1. 0_konsep_dasar.doc
+2. 1_struktur_database.doc
+3. 2_front_end.doc
+4. 3_back_end.doc
+
+Sengaja dibuat dengan format halaman dokumen (.doc) berbasis kode penataan agar Microsoft Word dapat membacanya langsung dengan rapi (lengkap dengan tabel asli Word, teks berwarna, serta pemformatan tebal/miring).
+
+Jika Anda membuka file .doc tersebut di VS Code atau Notepad, Anda hanya akan melihat kode HTML (seperti <html>, <body>, <table>). Jangan khawatir, itu adalah hal yang wajar.
+
+Langkah-langkah untuk membukanya di Microsoft Word dan menyimpannya ke .docx:
+------------------------------------------------------------------------
+1. Buka File Explorer di komputer Anda.
+2. Masuk ke folder project Anda:
+   c:\xampp\htdocs\berkah-alam\dokumen_ujian\
+3. Klik kanan pada salah satu file (misal: 1_struktur_database.doc).
+4. Pilih "Open with" -> "Microsoft Word" (atau klik dua kali jika Word sudah menjadi default).
+5. File akan terbuka di Microsoft Word dengan tampilan laporan yang sangat rapi dan tabel yang otomatis terformat.
+6. Untuk menyimpannya ke format Word modern (.docx):
+   - Di Microsoft Word, klik menu "File" di pojok kiri atas.
+   - Pilih "Save As" (Simpan Sebagai).
+   - Pilih folder penyimpanan Anda.
+   - Pada pilihan "Save as type" (Tipe file), ubah dari "Single File Web Page" atau "Web Page" menjadi "Word Document (*.docx)".
+   - Klik "Save" (Simpan).
+
+Kini Anda memiliki file laporan berformat .docx murni yang siap dikumpulkan!
+========================================================================

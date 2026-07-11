@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Laporan Ujian Web - Berkah Alam</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-gold: #c5a059;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #0b0f19;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            gap: 12px;
+        }
+
+        .sidebar-brand i {
+            font-size: 1.8rem;
+            color: var(--accent-gold);
+        }
+
+        .sidebar-brand span {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: auto;
+        }
+
+        .menu-item button {
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .menu-item button:hover {
+            color: var(--text-main);
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .menu-item.active button {
+            color: #0b0f19;
+            background-color: var(--accent-gold);
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(197, 168, 128, 0.3);
+        }
+
+        .sidebar-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-print {
+            width: 100%;
+            background-color: transparent;
+            border: 1.5px solid var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 12px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-print:hover {
+            background-color: var(--accent-gold);
+            color: #0b0f19;
+            box-shadow: 0 4px 12px rgba(197, 168, 128, 0.25);
+        }
+
+        /* Main Content Styling */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 40px 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .page-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .page-header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+            margin-bottom: 6px;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Content Sections */
+        .content-tab {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .content-tab.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Premium Document Styling */
+        .doc-card {
+            background-color: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            line-height: 1.7;
+        }
+
+        /* Document typography */
+        .doc-card h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--accent-gold);
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 8px;
+        }
+
+        .doc-card h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .doc-card h3 {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .doc-card p {
+            color: #cbd5e1;
+            margin-bottom: 18px;
+            font-size: 0.95rem;
+        }
+
+        .doc-card ul {
+            margin-left: 24px;
+            margin-bottom: 18px;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+
+        .doc-card li {
+            margin-bottom: 8px;
+        }
+
+        .doc-card strong {
+            color: var(--text-main);
+        }
+
+        /* Tables style */
+        .doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9rem;
+        }
+
+        .doc-table th, .doc-table td {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 16px;
+            text-align: left;
+        }
+
+        .doc-table th {
+            background-color: rgba(255, 255, 255, 0.03);
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .doc-table tr:hover {
+            background-color: rgba(255, 255, 255, 0.01);
+        }
+
+        /* Code style */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: #e2e8f0;
+            padding: 3px 6px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        pre {
+            background-color: #0b0f19;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            color: #38bdf8;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Alerts */
+        .doc-alert {
+            background-color: rgba(197, 168, 128, 0.05);
+            border-left: 4px solid var(--accent-gold);
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 25px 0;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* Mermaid placeholder */
+        .erd-box {
+            background-color: #0b0f19;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .erd-box pre {
+            border: none;
+            background: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .erd-box pre code {
+            color: #10b981;
+        }
+
+        /* CSS Print Stylesheet optimization */
+        @media print {
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                display: block;
+            }
+
+            .sidebar {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                padding: 0 !important;
+            }
+
+            .page-header {
+                display: none !important;
+            }
+
+            .content-tab {
+                display: none !important;
+            }
+
+            .content-tab.active {
+                display: block !important;
+            }
+
+            .doc-card {
+                background: none !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                backdrop-filter: none !important;
+                color: #000000 !important;
+            }
+
+            .doc-card h2 {
+                color: #000000 !important;
+                border-bottom: 2px solid #333333 !important;
+                page-break-after: avoid;
+            }
+
+            .doc-card h3 {
+                color: #000000 !important;
+                page-break-after: avoid;
+            }
+
+            .doc-card p, .doc-card li, .doc-card td {
+                color: #333333 !important;
+            }
+
+            .doc-table th {
+                background-color: #f1f5f9 !important;
+                color: #000000 !important;
+                border: 1px solid #cbd5e1 !important;
+            }
+
+            .doc-table td {
+                border: 1px solid #cbd5e1 !important;
+            }
+
+            code {
+                background-color: #f1f5f9 !important;
+                color: #090d16 !important;
+                border: 1px solid #cbd5e1 !important;
+            }
+
+            pre {
+                background-color: #f8fafc !important;
+                border: 1px solid #cbd5e1 !important;
+                color: #000000 !important;
+                page-break-inside: avoid;
+            }
+
+            pre code {
+                color: #0f172a !important;
+            }
+
+            .doc-alert {
+                background-color: #f8fafc !important;
+                border-left: 4px solid #000000 !important;
+                color: #333333 !important;
+            }
+
+            .erd-box {
+                background-color: #f8fafc !important;
+                border: 1px solid #cbd5e1 !important;
+            }
+
+            .erd-box pre code {
+                color: #000000 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="bi bi-gem"></i>
+            <span>Berkah Alam</span>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="menu-item active" data-target="tab-konsep">
+                <button><i class="bi bi-mortarboard-fill"></i>Konsep Dasar Web</button>
+            </li>
+            <li class="menu-item" data-target="tab-file1">
+                <button><i class="bi bi-database-fill-gear"></i>File 1: Database</button>
+            </li>
+            <li class="menu-item" data-target="tab-file2">
+                <button><i class="bi bi-layout-wtf"></i>File 2: Front End</button>
+            </li>
+            <li class="menu-item" data-target="tab-file3">
+                <button><i class="bi bi-cpu-fill"></i>File 3: Back End</button>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <button class="btn-print" onclick="window.print()">
+                <i class="bi bi-printer-fill"></i> Cetak ke PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        
+        <!-- Tab 0: Konsep Dasar -->
+        <div id="tab-konsep" class="content-tab active">
+            <div class="page-header">
+                <h1>Konsep Dasar Pemrograman Web</h1>
+                <p>Pembahasan teori konsep dasar CRUD, CMV (MVC), dan Keamanan Data pada Berkah Alam.</p>
+            </div>
+            
+            <div class="doc-card">
+                <h2>1. CRUD (Create, Read, Update, Delete)</h2>
+                <p>CRUD adalah representasi dari fungsi-fungsi dasar manipulasi data pada penyimpanan persisten.</p>
+                
+                <h3>A. Create (Membuat Data Baru)</h3>
+                <p>Proses menambahkan data baru ke dalam database. Pada project Berkah Alam:</p>
+                <ul>
+                    <li><strong>Customer:</strong> Mengajukan order pembelian batu nisan dengan mengirim data ke <code>OrderController@placeOrder</code> yang menyimpannya ke tabel <code>pesanan</code> dan <code>detail_pesanan</code>.</li>
+                    <li><strong>Customer:</strong> Mengunggah bukti pembayaran yang kemudian disimpan ke tabel <code>pembayaran</code>.</li>
+                </ul>
+
+                <h3>B. Read (Membaca Data)</h3>
+                <p>Proses menampilkan data yang ada pada database ke antarmuka pengguna.</p>
+                <ul>
+                    <li><strong>Public:</strong> Melihat katalog produk nisan dan prasasti batu alam di Landing Page melalui <code>LandingPageController@index</code>.</li>
+                    <li><strong>Admin:</strong> Melihat tabel data transaksi pesanan masuk pada halaman Kelola Pesanan.</li>
+                </ul>
+
+                <h3>C. Update (Mengubah Data)</h3>
+                <p>Proses memperbarui data yang tersimpan di database.</p>
+                <ul>
+                    <li><strong>Customer:</strong> Mengubah alamat pengiriman dan nomor telepon pada profil akun mereka.</li>
+                    <li><strong>Admin:</strong> Melakukan konfirmasi pembayaran dengan mengubah kolom status pada tabel <code>pembayaran</code> dan <code>pesanan</code> menjadi <code>diverifikasi</code> atau <code>ditolak</code>.</li>
+                </ul>
+
+                <h3>D. Delete (Menghapus Data)</h3>
+                <p>Proses menghapus data dari database secara permanen.</p>
+                <ul>
+                    <li><strong>Admin:</strong> Menghapus kategori atau produk batu alam yang sudah tidak dijual dari sistem. Sistem menggunakan relasi <code>ON DELETE CASCADE</code> untuk menjamin data transaksi lama tidak bentrok.</li>
+                </ul>
+
+                <h2>2. CMV / MVC (Controller - Model - View)</h2>
+                <p>Pola arsitektur penulisan program untuk memisahkan antara data, tampilan, dan logika bisnis utama.</p>
+                
+                <h3>A. Model</h3>
+                <p>Merepresentasikan struktur data dan berhubungan langsung dengan tabel database MySQL melalui Eloquent ORM di Laravel.</p>
+                <p>Contoh: File <code>app/Models/Produk.php</code> mendefinisikan properti produk, relasi ke kategori (<code>kategori()</code>), dan detail pesanan.</p>
+
+                <h3>B. View</h3>
+                <p>Komponen antarmuka visual tempat data disajikan kepada pengguna, dibangun menggunakan Blade Templating Engine di Laravel.</p>
+                <p>Contoh: File <code>resources/views/welcome.blade.php</code> mengolah data array produk untuk ditampilkan dalam grid card produk.</p>
+
+                <h3>C. Controller</h3>
+                <p>Komponen penjembatan. Controller menerima request dari route web, memanggil fungsi Model untuk mengolah data database, dan mengirimkannya ke View untuk dirender.</p>
+                <p>Contoh: <code>LandingPageController</code> mengambil semua data produk aktif dari database dan mengirimkannya ke landing page.</p>
+
+                <h2>3. Keamanan Data</h2>
+                <p>Aspek perlindungan integritas dan privasi data aplikasi dari serangan siber:</p>
+                <ul>
+                    <li><strong>Password Hashing:</strong> Menyimpan password dalam bentuk enkripsi satu arah (Bcrypt) sehingga jika database bocor, password tidak dapat dibaca.</li>
+                    <li><strong>CSRF Protection:</strong> Token pengaman unik otomatis pada setiap request form di Laravel dengan tag <code>@csrf</code> untuk mencegah manipulasi form dari luar aplikasi.</li>
+                    <li><strong>SQL Injection Prevention:</strong> Menggunakan Eloquent ORM yang memanfaatkan PDO Parameter Binding untuk memfilter seluruh input form sebelum masuk ke database.</li>
+                    <li><strong>Route Authorization:</strong> Penggunaan middleware <code>auth</code> dan <code>role:admin</code> untuk memblokir akses ke halaman admin dari pengguna umum atau peretas.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab 1: Database -->
+        <div id="tab-file1" class="content-tab">
+            <div class="page-header">
+                <h1>FILE 1: Struktur Database dan Tabel</h1>
+                <p>Dokumentasi ERD, Relasi Antartabel, Skema Kolom, dan Script SQL DDL.</p>
+            </div>
+            
+            <div class="doc-card">
+                <h2>1. Diagram Hubungan Entitas (ERD)</h2>
+                <div class="erd-box">
+                    <p><strong>Skema Relasi Antartabel</strong></p>
+                    <pre><code>
+    [USERS] --1:N--> [PESANAN] --1:1--> [PEMBAYARAN]
+                        |
+                        +--1:N--> [DETAIL_PESANAN] <--N:1-- [PRODUK] <--N:1-- [KATEGORI]
+                    </code></pre>
+                </div>
+                
+                <h2>2. Skema & Kolom Tabel Utama</h2>
+                
+                <h3>A. Tabel `users` (Menampung Akun Admin & Customer)</h3>
+                <table class="doc-table">
+                    <thead>
+                        <tr>
+                            <th>Kolom</th>
+                            <th>Tipe Data</th>
+                            <th>Kunci</th>
+                            <th>Deskripsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td>bigint(20) unsigned</td>
+                            <td>PK, AI</td>
+                            <td>ID unik user</td>
+                        </tr>
+                        <tr>
+                            <td>name</td>
+                            <td>varchar(255)</td>
+                            <td>-</td>
+                            <td>Nama lengkap user</td>
+                        </tr>
+                        <tr>
+                            <td>email</td>
+                            <td>varchar(255)</td>
+                            <td>Unique</td>
+                            <td>Email (username login)</td>
+                        </tr>
+                        <tr>
+                            <td>password</td>
+                            <td>varchar(255)</td>
+                            <td>-</td>
+                            <td>Hash password Bcrypt</td>
+                        </tr>
+                        <tr>
+                            <td>role</td>
+                            <td>varchar(255)</td>
+                            <td>-</td>
+                            <td>Peran user ('admin'/'customer')</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>B. Tabel `produk` (Katalog Batu Nisan & Prasasti)</h3>
+                <table class="doc-table">
+                    <thead>
+                        <tr>
+                            <th>Kolom</th>
+                            <th>Tipe Data</th>
+                            <th>Kunci</th>
+                            <th>Deskripsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td>bigint(20) unsigned</td>
+                            <td>PK, AI</td>
+                            <td>ID unik produk</td>
+                        </tr>
+                        <tr>
+                            <td>kategori_id</td>
+                            <td>bigint(20) unsigned</td>
+                            <td>FK</td>
+                            <td>Relasi ke tabel kategori</td>
+                        </tr>
+                        <tr>
+                            <td>nama</td>
+                            <td>varchar(255)</td>
+                            <td>-</td>
+                            <td>Nama produk kerajinan</td>
+                        </tr>
+                        <tr>
+                            <td>harga</td>
+                            <td>decimal(15,2)</td>
+                            <td>-</td>
+                            <td>Harga batu alam</td>
+                        </tr>
+                        <tr>
+                            <td>stok</td>
+                            <td>int(11)</td>
+                            <td>-</td>
+                            <td>Jumlah stok barang</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>C. Tabel `pesanan` (Transaksi Pembelian)</h3>
+                <table class="doc-table">
+                    <thead>
+                        <tr>
+                            <th>Kolom</th>
+                            <th>Tipe Data</th>
+                            <th>Kunci</th>
+                            <th>Deskripsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td>bigint(20) unsigned</td>
+                            <td>PK, AI</td>
+                            <td>Nomor Transaksi</td>
+                        </tr>
+                        <tr>
+                            <td>user_id</td>
+                            <td>bigint(20) unsigned</td>
+                            <td>FK</td>
+                            <td>ID customer pemesan</td>
+                        </tr>
+                        <tr>
+                            <td>total</td>
+                            <td>decimal(15,2)</td>
+                            <td>-</td>
+                            <td>Total harga transaksi</td>
+                        </tr>
+                        <tr>
+                            <td>status</td>
+                            <td>enum</td>
+                            <td>-</td>
+                            <td>'pending', 'diverifikasi', 'selesai'</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>3. Script DDL Database (SQL Dump)</h2>
+                <pre><code>-- Pembuatan Tabel User
+CREATE TABLE `users` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` varchar(255) NOT NULL DEFAULT 'customer',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Pembuatan Tabel Produk
+CREATE TABLE `produk` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `kategori_id` bigint(20) UNSIGNED NOT NULL,
+  `nama` varchar(255) NOT NULL,
+  `harga` decimal(15,2) NOT NULL,
+  `stok` int(11) NOT NULL DEFAULT 0,
+  `gambar` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `produk_kategori_id_foreign` FOREIGN KEY (`kategori_id`) REFERENCES `kategori` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</code></pre>
+            </div>
+        </div>
+
+        <!-- Tab 2: Front End -->
+        <div id="tab-file2" class="content-tab">
+            <div class="page-header">
+                <h1>FILE 2: Script dan UI Front End</h1>
+                <p>Implementasi visual antarmuka pengguna pada Landing Page, Detail Order, dan Upload Bukti Pembayaran.</p>
+            </div>
+            
+            <div class="doc-card">
+                <h2>1. Layout Master (`app.blade.php`)</h2>
+                <p>Mengintegrasikan Bootstrap 5 dengan desain Glassmorphism untuk menghasilkan tampilan premium.</p>
+                <pre><code>&lt;!-- resources/views/layouts/app.blade.php --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="id"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;@yield('title')&lt;/title&gt;
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+    &lt;style&gt;
+        :root {
+            --primary-color: #1A1A1A;
+            --accent-color: #C5A059; /* Gold */
+        }
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(25px);
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    @yield('content')
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+                <h2>2. Halaman Utama Katalog Produk (`welcome.blade.php`)</h2>
+                <p>Menampilkan katalog nisan/prasasti secara responsif dengan grid Bootstrap.</p>
+                <pre><code>&lt;div class="row g-4"&gt;
+    @foreach($products as $product)
+        &lt;div class="col-md-4"&gt;
+            &lt;div class="card shadow-sm border-0 rounded-4 overflow-hidden"&gt;
+                &lt;img src="{{ asset($product->gambar) }}" class="card-img-top" style="height: 280px; object-fit: cover;"&gt;
+                &lt;div class="card-body p-4"&gt;
+                    &lt;span class="badge bg-light text-dark"&gt;{{ $product->kategori->nama }}&lt;/span&gt;
+                    &lt;h5 class="fw-bold mt-2"&gt;{{ $product->nama }}&lt;/h5&gt;
+                    &lt;p class="text-warning fw-bold"&gt;Rp {{ number_format($product->harga, 0, ',', '.') }}&lt;/p&gt;
+                    &lt;a href="{{ route('customer.produk.detail', $product->id) }}" class="btn btn-stone-outline w-100"&gt;Detail & Pesan&lt;/a&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    @endforeach
+&lt;/div&gt;</code></pre>
+
+                <h2>3. Form Kustomisasi Detail Produk (`produk_detail.blade.php`)</h2>
+                <p>Menyediakan input khusus untuk menangkap teks nisan/prasasti yang akan dipahat.</p>
+                <pre><code>&lt;!-- Catatan Ukiran Kustom --&gt;
+&lt;div class="mb-3"&gt;
+    &lt;label for="catatan_ukiran" class="form-label text-muted small fw-semibold"&gt;Teks Ukiran Nisan / Prasasti&lt;/label&gt;
+    &lt;textarea name="catatan_ukiran" id="catatan_ukiran" class="form-control" rows="4" 
+              placeholder="Contoh:&#10;Nama: Alm. Ahmad&#10;Lahir: 12 Jan 1960&#10;Wafat: 24 Feb 2024"&gt;&lt;/textarea&gt;
+&lt;/div&gt;
+
+&lt;!-- Alamat Pengiriman --&gt;
+&lt;div class="mb-3"&gt;
+    &lt;label for="alamat" class="form-label"&gt;Alamat Pengiriman&lt;/label&gt;
+    &lt;textarea name="alamat" id="alamat" class="form-control" required&gt;{{ Auth::user()->address }}&lt;/textarea&gt;
+&lt;/div&gt;</code></pre>
+
+                <h2>4. Upload Bukti Pembayaran (`pembayaran.blade.php`)</h2>
+                <div class="doc-alert">
+                    Atribut enctype="multipart/form-data" harus didefinisikan agar browser dapat mengirim berkas gambar bukti transfer ke controller Laravel.
+                </div>
+                <pre><code>&lt;form method="POST" action="{{ route('customer.pembayaran.store', $order->id) }}" enctype="multipart/form-data"&gt;
+    @csrf
+    &lt;div class="mb-4"&gt;
+        &lt;label for="bukti_pembayaran" class="form-label"&gt;Pilih File Foto Bukti Pembayaran&lt;/label&gt;
+        &lt;input type="file" name="bukti_pembayaran" id="bukti_pembayaran" class="form-control" required accept="image/*"&gt;
+    &lt;/div&gt;
+    &lt;button type="submit" class="btn btn-primary w-100"&gt;Kirim Bukti Pembayaran&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+        </div>
+
+        <!-- Tab 3: Back End -->
+        <div id="tab-file3" class="content-tab">
+            <div class="page-header">
+                <h1>FILE 3: Script dan UI Back End</h1>
+                <p>Otorisasi Middleware, Logika Verifikasi Transaksi, CRUD Kategori/Produk, dan Ekspor Invoice PDF.</p>
+            </div>
+            
+            <div class="doc-card">
+                <h2>1. Logika Verifikasi Bukti Pembayaran (`AdminPesananController.php`)</h2>
+                <p>Memproses keputusan admin untuk memverifikasi atau menolak bukti transfer yang diunggah customer.</p>
+                <pre><code>public function verifyPayment(Request $request, $id)
+{
+    $order = Pesanan::with('pembayaran')->findOrFail($id);
+    
+    if (!$order->pembayaran) {
+        return back()->with('error', 'Pesanan ini belum memiliki bukti pembayaran.');
+    }
+
+    $request->validate([
+        'action' => ['required', 'in:verify,reject'],
+    ]);
+
+    if ($request->action === 'verify') {
+        $order->pembayaran->update(['status' => 'diverifikasi']);
+        $order->update(['status' => 'diverifikasi']);
+        return back()->with('success', 'Pembayaran berhasil diverifikasi!');
+    } else {
+        $order->pembayaran->update(['status' => 'ditolak']);
+        $order->update(['status' => 'ditolak']);
+        return back()->with('success', 'Pembayaran ditolak!');
+    }
+}</code></pre>
+
+                <h2>2. Ekspor Struk Invoice ke PDF (`dompdf`)</h2>
+                <p>Logika backend memanggil file template struk dan merendernya ke dokumen PDF.</p>
+                <pre><code>use Barryvdh\DomPDF\Facade\Pdf;
+
+public function exportPdf($id)
+{
+    $order = Pesanan::with(['user', 'pembayaran', 'detailPesanan.produk'])->findOrFail($id);
+    $pdf = Pdf::loadView('admin.pesanan.pdf', compact('order'));
+    return $pdf->download('Invoice-BA-' . $order->id . '.pdf');
+}</code></pre>
+
+                <h2>3. CRUD Produk dengan Upload Gambar (`AdminProdukController.php`)</h2>
+                <p>Menyimpan data produk baru serta mengunggah gambar produk secara aman ke public server.</p>
+                <pre><code>public function store(Request $request)
+{
+    $request->validate([
+        'kategori_id' => 'required|exists:kategori,id',
+        'nama' => 'required|string',
+        'harga' => 'required|numeric',
+        'gambar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
+
+    $data = $request->all();
+
+    if ($request->hasFile('gambar')) {
+        $file = $request->file('gambar');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads/produk'), $filename);
+        $data['gambar'] = 'uploads/produk/' . $filename;
+    }
+
+    Produk::create($data);
+    return redirect()->route('admin.produk.index')->with('success', 'Produk ditambahkan!');
+}</code></pre>
+
+                <h2>4. UI Kelola Data Pesanan Admin (`index.blade.php`)</h2>
+                <p>Tampilan tabel dinamis dengan framework CSS Bootstrap 5 dan fitur pencarian DataTables.</p>
+                <pre><code>&lt;table id="datatables" class="table table-hover"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;ID Pesanan&lt;/th&gt;
+            &lt;th&gt;Nama Customer&lt;/th&gt;
+            &lt;th&gt;Total Tagihan&lt;/th&gt;
+            &lt;th&gt;Status&lt;/th&gt;
+            &lt;th&gt;Aksi&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        @foreach($orders as $order)
+            &lt;tr&gt;
+                &lt;td&gt;#BA-{{ $order->id }}&lt;/td&gt;
+                &lt;td&gt;{{ $order->user->name }}&lt;/td&gt;
+                &lt;td&gt;Rp {{ number_format($order->total, 0, ',', '.') }}&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge bg-warning"&gt;{{ $order->status }}&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;
+                    &lt;a href="{{ route('admin.pesanan.show', $order->id) }}" class="btn btn-sm btn-primary"&gt;Detail&lt;/a&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+        @endforeach
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script Tab Navigation -->
+    <script>
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove active classes
+                document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.content-tab').forEach(el => el.classList.remove('active'));
+                
+                // Add active to current
+                item.classList.add('active');
+                const target = item.getAttribute('data-target');
+                document.getElementById(target).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

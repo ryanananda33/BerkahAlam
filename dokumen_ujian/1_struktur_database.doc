@@ -1,0 +1,495 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset="utf-8">
+<title>FILE 1: Struktur Database dan Tabel - Berkah Alam</title>
+<!--[if gte mso 9]>
+<xml>
+ <w:WordDocument>
+  <w:View>Print</w:View>
+  <w:DoNotOptimizeForBrowser/>
+ </w:WordDocument>
+</xml>
+<![endif]-->
+<style>
+body {
+    font-family: "Calibri", "Arial", sans-serif;
+    font-size: 11.0pt;
+    line-height: 1.3;
+    color: #333333;
+}
+h1 {
+    font-family: "Century Gothic", "Arial", sans-serif;
+    font-size: 20.0pt;
+    color: #1a1a1a;
+    font-weight: bold;
+    margin-top: 18pt;
+    margin-bottom: 12pt;
+    border-bottom: 2px solid #c5a059;
+    padding-bottom: 4px;
+}
+h2 {
+    font-family: "Century Gothic", "Arial", sans-serif;
+    font-size: 14.0pt;
+    color: #c5a059;
+    font-weight: bold;
+    margin-top: 16pt;
+    margin-bottom: 8pt;
+}
+h3 {
+    font-size: 12.0pt;
+    color: #444444;
+    font-weight: bold;
+    margin-top: 12pt;
+    margin-bottom: 6pt;
+}
+p, li {
+    margin-bottom: 6pt;
+}
+ul, ol {
+    margin-top: 0;
+    margin-bottom: 8pt;
+    padding-left: 20pt;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8pt;
+    margin-bottom: 12pt;
+}
+table, th, td {
+    border: 1px solid #aaaaaa;
+}
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    padding: 6px 10px;
+    font-size: 10.0pt;
+    text-align: left;
+}
+td {
+    padding: 6px 10px;
+    font-size: 9.5pt;
+}
+.highlight {
+    background-color: #f2f2f2;
+    font-family: "Courier New", monospace;
+    font-size: 10.0pt;
+    padding: 2px 4px;
+    border: 1px solid #dddddd;
+}
+pre {
+    background-color: #f9f9f9;
+    border: 1px solid #cccccc;
+    padding: 10px;
+    margin-top: 8pt;
+    margin-bottom: 12pt;
+}
+pre code {
+    font-family: "Courier New", monospace;
+    font-size: 9.5pt;
+    color: #000080;
+}
+</style>
+</head>
+<body>
+
+<h1>FILE 1: STRUKTUR DATABASE DAN TABEL</h1>
+<p><strong>Sistem Informasi UMKM Berkah Alam</strong></p>
+<p>Dokumen ini menyajikan pemetaan Entity Relationship Diagram (ERD), deskripsi kolom skema tabel database, serta script inisialisasi DDL SQL untuk project Berkah Alam.</p>
+
+<hr style="border: 0; border-top: 1px solid #dddddd; margin: 18pt 0;" />
+
+<h2>1. Diagram Hubungan Entitas (Entity Relationship Diagram - ERD)</h2>
+<p>Penyusunan hubungan antartabel di dalam database MySQL sistem informasi Berkah Alam digambarkan sebagai berikut:</p>
+
+<pre><code>
+    [users] (1) ------ memiliki ------> (N) [pesanan]
+                                                |
+                                           (1) berelasi
+                                                |
+                                           (1) memiliki
+                                                |
+                                                v
+                                           (1) [pembayaran]
+                                                |
+    [kategori] (1) ---> (N) [produk] (1) ---> (N) [detail_pesanan] (N) <--- (1) [pesanan]
+</code></pre>
+
+<p><strong>Hubungan Relasi Kunci (Keys Connection):</strong></p>
+<ul>
+    <li>Tabel <code>pesanan</code> berelasi dengan tabel <code>users</code> via FK <code>user_id</code> &rarr; <code>users.id</code>.</li>
+    <li>Tabel <code>produk</code> berelasi dengan tabel <code>kategori</code> via FK <code>kategori_id</code> &rarr; <code>kategori.id</code>.</li>
+    <li>Tabel <code>detail_pesanan</code> berelasi dengan <code>pesanan</code> (FK <code>pesanan_id</code> &rarr; <code>pesanan.id</code>) dan <code>produk</code> (FK <code>produk_id</code> &rarr; <code>produk.id</code>).</li>
+    <li>Tabel <code>pembayaran</code> berelasi satu-ke-satu (1:1) dengan <code>pesanan</code> via FK <code>pesanan_id</code> &rarr; <code>pesanan.id</code>.</li>
+</ul>
+
+<hr style="border: 0; border-top: 1px solid #dddddd; margin: 18pt 0;" />
+
+<h2>2. Skema dan Penjelasan Kolom Tabel</h2>
+
+<h3>A. Tabel <code>users</code></h3>
+<p>Berfungsi menyimpan data akun administrator dan pelanggan (customer).</p>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 25%;">Kolom</th>
+            <th style="width: 25%;">Tipe Data</th>
+            <th style="width: 15%;">Atribut Kunci</th>
+            <th style="width: 35%;">Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Primary Key (AI)</td>
+            <td>ID unik user.</td>
+        </tr>
+        <tr>
+            <td><code>name</code></td>
+            <td>varchar(255)</td>
+            <td>-</td>
+            <td>Nama lengkap user.</td>
+        </tr>
+        <tr>
+            <td><code>email</code></td>
+            <td>varchar(255)</td>
+            <td>Unique Key</td>
+            <td>Alamat email untuk identitas login.</td>
+        </tr>
+        <tr>
+            <td><code>password</code></td>
+            <td>varchar(255)</td>
+            <td>-</td>
+            <td>Kata sandi yang di-hash dengan Bcrypt.</td>
+        </tr>
+        <tr>
+            <td><code>role</code></td>
+            <td>varchar(255)</td>
+            <td>-</td>
+            <td>Peran hak akses ('admin' / 'customer').</td>
+        </tr>
+        <tr>
+            <td><code>phone</code></td>
+            <td>varchar(20)</td>
+            <td>-</td>
+            <td>Nomor HP/WhatsApp customer.</td>
+        </tr>
+        <tr>
+            <td><code>address</code></td>
+            <td>text</td>
+            <td>-</td>
+            <td>Alamat pengiriman/rumah customer.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>B. Tabel <code>kategori</code></h3>
+<p>Menampung jenis-jenis produk batu alam (batu nisan, prasasti, monumen, dll.).</p>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 25%;">Kolom</th>
+            <th style="width: 25%;">Tipe Data</th>
+            <th style="width: 15%;">Atribut Kunci</th>
+            <th style="width: 35%;">Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Primary Key (AI)</td>
+            <td>ID unik kategori.</td>
+        </tr>
+        <tr>
+            <td><code>nama</code></td>
+            <td>varchar(255)</td>
+            <td>-</td>
+            <td>Nama kategori (misal: "Batu Nisan").</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>C. Tabel <code>produk</code></h3>
+<p>Katalog produk kerajinan marmer, granit, dan batu alam.</p>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 25%;">Kolom</th>
+            <th style="width: 25%;">Tipe Data</th>
+            <th style="width: 15%;">Atribut Kunci</th>
+            <th style="width: 35%;">Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Primary Key (AI)</td>
+            <td>ID unik produk.</td>
+        </tr>
+        <tr>
+            <td><code>kategori_id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Foreign Key</td>
+            <td>Relasi ke <code>kategori.id</code> (Cascade).</td>
+        </tr>
+        <tr>
+            <td><code>nama</code></td>
+            <td>varchar(255)</td>
+            <td>-</td>
+            <td>Nama produk batu alam.</td>
+        </tr>
+        <tr>
+            <td><code>harga</code></td>
+            <td>decimal(15,2)</td>
+            <td>-</td>
+            <td>Harga jual produk.</td>
+        </tr>
+        <tr>
+            <td><code>stok</code></td>
+            <td>int(11)</td>
+            <td>-</td>
+            <td>Jumlah stok produk tersedia.</td>
+        </tr>
+        <tr>
+            <td><code>deskripsi</code></td>
+            <td>text</td>
+            <td>-</td>
+            <td>Detail bahan baku dan pengerjaan pahat.</td>
+        </tr>
+        <tr>
+            <td><code>gambar</code></td>
+            <td>varchar(255)</td>
+            <td>-</td>
+            <td>File path gambar/foto produk.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>D. Tabel <code>pesanan</code></h3>
+<p>Mencatat pemesanan kustom dari customer.</p>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 25%;">Kolom</th>
+            <th style="width: 25%;">Tipe Data</th>
+            <th style="width: 15%;">Atribut Kunci</th>
+            <th style="width: 35%;">Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Primary Key (AI)</td>
+            <td>Nomor ID transaksi pesanan.</td>
+        </tr>
+        <tr>
+            <td><code>user_id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Foreign Key</td>
+            <td>Relasi ke <code>users.id</code> (Cascade).</td>
+        </tr>
+        <tr>
+            <td><code>tanggal</code></td>
+            <td>date</td>
+            <td>-</td>
+            <td>Tanggal transaksi dibuat.</td>
+        </tr>
+        <tr>
+            <td><code>total</code></td>
+            <td>decimal(15,2)</td>
+            <td>-</td>
+            <td>Total harga tagihan belanja.</td>
+        </tr>
+        <tr>
+            <td><code>status</code></td>
+            <td>enum</td>
+            <td>-</td>
+            <td>'pending', 'diverifikasi', 'diproses', 'selesai', 'ditolak'.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>E. Tabel <code>detail_pesanan</code></h3>
+<p>Menyimpan rincian item dalam pesanan lengkap dengan catatan tulisan yang akan diukir.</p>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 25%;">Kolom</th>
+            <th style="width: 25%;">Tipe Data</th>
+            <th style="width: 15%;">Atribut Kunci</th>
+            <th style="width: 35%;">Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Primary Key (AI)</td>
+            <td>ID unik detail pesanan.</td>
+        </tr>
+        <tr>
+            <td><code>pesanan_id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Foreign Key</td>
+            <td>Relasi ke <code>pesanan.id</code>.</td>
+        </tr>
+        <tr>
+            <td><code>produk_id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Foreign Key</td>
+            <td>Relasi ke <code>produk.id</code>.</td>
+        </tr>
+        <tr>
+            <td><code>qty</code></td>
+            <td>int(11)</td>
+            <td>-</td>
+            <td>Kuantitas barang yang dipesan.</td>
+        </tr>
+        <tr>
+            <td><code>harga</code></td>
+            <td>decimal(15,2)</td>
+            <td>-</td>
+            <td>Harga barang saat transaksi.</td>
+        </tr>
+        <tr>
+            <td><code>catatan_ukiran</code></td>
+            <td>text</td>
+            <td>-</td>
+            <td>Teks nama & tanggal yang dipahat di batu.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>F. Tabel <code>pembayaran</code></h3>
+<p>Menampung unggahan bukti transfer pembayaran transaksi.</p>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 25%;">Kolom</th>
+            <th style="width: 25%;">Tipe Data</th>
+            <th style="width: 15%;">Atribut Kunci</th>
+            <th style="width: 35%;">Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Primary Key (AI)</td>
+            <td>ID unik pembayaran.</td>
+        </tr>
+        <tr>
+            <td><code>pesanan_id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Foreign Key</td>
+            <td>Relasi ke <code>pesanan.id</code> (1:1).</td>
+        </tr>
+        <tr>
+            <td><code>bukti_pembayaran</code></td>
+            <td>varchar(255)</td>
+            <td>-</td>
+            <td>File path foto bukti transfer bank.</td>
+        </tr>
+        <tr>
+            <td><code>tanggal_bayar</code></td>
+            <td>datetime</td>
+            <td>-</td>
+            <td>Waktu unggahan berkas oleh user.</td>
+        </tr>
+        <tr>
+            <td><code>status</code></td>
+            <td>enum</td>
+            <td>-</td>
+            <td>'pending', 'diverifikasi', 'ditolak'.</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr style="border: 0; border-top: 1px solid #dddddd; margin: 18pt 0;" />
+
+<h2>3. DDL SQL (Database Definition Language) Inisialisasi Tabel</h2>
+<pre><code>-- Hapus tabel jika sudah ada (menghindari bentrok impor)
+DROP TABLE IF EXISTS `pembayaran`;
+DROP TABLE IF EXISTS `detail_pesanan`;
+DROP TABLE IF EXISTS `pesanan`;
+DROP TABLE IF EXISTS `produk`;
+DROP TABLE IF EXISTS `kategori`;
+DROP TABLE IF EXISTS `users`;
+
+-- Tabel: users
+CREATE TABLE `users` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` varchar(255) NOT NULL DEFAULT 'customer',
+  `phone` varchar(20) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabel: kategori
+CREATE TABLE `kategori` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nama` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabel: produk
+CREATE TABLE `produk` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `kategori_id` bigint(20) UNSIGNED NOT NULL,
+  `nama` varchar(255) NOT NULL,
+  `harga` decimal(15,2) NOT NULL,
+  `stok` int(11) NOT NULL DEFAULT 0,
+  `deskripsi` text DEFAULT NULL,
+  `gambar` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`kategori_id`) REFERENCES `kategori` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabel: pesanan
+CREATE TABLE `pesanan` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `tanggal` date NOT NULL,
+  `total` decimal(15,2) NOT NULL,
+  `status` enum('pending','diverifikasi','diproses','selesai','ditolak') NOT NULL DEFAULT 'pending',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabel: detail_pesanan
+CREATE TABLE `detail_pesanan` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `pesanan_id` bigint(20) UNSIGNED NOT NULL,
+  `produk_id` bigint(20) UNSIGNED NOT NULL,
+  `qty` int(11) NOT NULL,
+  `harga` decimal(15,2) NOT NULL,
+  `catatan_ukiran` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`pesanan_id`) REFERENCES `pesanan` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`produk_id`) REFERENCES `produk` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabel: pembayaran
+CREATE TABLE `pembayaran` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `pesanan_id` bigint(20) UNSIGNED NOT NULL,
+  `bukti_pembayaran` varchar(255) NOT NULL,
+  `tanggal_bayar` datetime NOT NULL,
+  `status` enum('pending','diverifikasi','ditolak') NOT NULL DEFAULT 'pending',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`pesanan_id`) REFERENCES `pesanan` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+</code></pre>
+
+</body>
+</html>

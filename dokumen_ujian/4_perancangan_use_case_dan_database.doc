@@ -1,0 +1,523 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset="utf-8">
+<title>FILE 4: Perancangan Use Case Diagram dan Database - Berkah Alam</title>
+<!--[if gte mso 9]>
+<xml>
+ <w:WordDocument>
+  <w:View>Print</w:View>
+  <w:DoNotOptimizeForBrowser/>
+ </w:WordDocument>
+</xml>
+<![endif]-->
+<style>
+body {
+    font-family: "Calibri", "Arial", sans-serif;
+    font-size: 11.0pt;
+    line-height: 1.3;
+    color: #333333;
+}
+h1 {
+    font-family: "Century Gothic", "Arial", sans-serif;
+    font-size: 20.0pt;
+    color: #1a1a1a;
+    font-weight: bold;
+    margin-top: 18pt;
+    margin-bottom: 12pt;
+    border-bottom: 2px solid #c5a059;
+    padding-bottom: 4px;
+}
+h2 {
+    font-family: "Century Gothic", "Arial", sans-serif;
+    font-size: 14.0pt;
+    color: #c5a059;
+    font-weight: bold;
+    margin-top: 16pt;
+    margin-bottom: 8pt;
+}
+h3 {
+    font-size: 12.0pt;
+    color: #444444;
+    font-weight: bold;
+    margin-top: 12pt;
+    margin-bottom: 6pt;
+}
+p, li {
+    margin-bottom: 6pt;
+}
+ul, ol {
+    margin-top: 0;
+    margin-bottom: 8pt;
+    padding-left: 20pt;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8pt;
+    margin-bottom: 12pt;
+}
+table, th, td {
+    border: 1px solid #aaaaaa;
+}
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    padding: 6px 10px;
+    font-size: 10.0pt;
+    text-align: left;
+}
+td {
+    padding: 6px 10px;
+    font-size: 9.5pt;
+}
+.highlight {
+    background-color: #f2f2f2;
+    font-family: "Courier New", monospace;
+    font-size: 10.0pt;
+    padding: 2px 4px;
+    border: 1px solid #dddddd;
+}
+pre {
+    background-color: #f9f9f9;
+    border: 1px solid #cccccc;
+    padding: 10px;
+    margin-top: 8pt;
+    margin-bottom: 12pt;
+}
+pre code {
+    font-family: "Courier New", monospace;
+    font-size: 9.5pt;
+    color: #000080;
+}
+</style>
+</head>
+<body>
+
+<h1>FILE 4: PERANCANGAN USE CASE DIAGRAM DAN DATABASE</h1>
+<p><strong>Sistem Informasi UMKM Berkah Alam</strong></p>
+<p>Dokumen ini menyajikan analisis pemodelan fungsional sistem menggunakan <strong>Use Case Diagram</strong> beserta rincian spesifikasinya, serta perancangan database terstruktur berupa <strong>Entity Relationship Diagram (ERD)</strong> dan <strong>Kamus Data</strong> untuk mendukung kelengkapan tugas akademis/ujian.</p>
+
+<hr style="border: 0; border-top: 1px solid #dddddd; margin: 18pt 0;" />
+
+<h2>1. Analisis Peran Pengguna (Actors)</h2>
+<p>Sistem ini berinteraksi dengan 2 kelompok pengguna (aktor) utama:</p>
+<ol>
+    <li><strong>Customer (Pelanggan)</strong>: Pengguna terdaftar dengan hak akses melakukan pendaftaran akun (register), login ke sistem, melakukan transaksi pemesanan produk kustom, serta memantau riwayat dan status pesanan.</li>
+    <li><strong>Admin (Administrator)</strong>: Operator internal toko/workshop dengan wewenang login sistem, mengontrol data produk & kategori, CMS konten halaman (hero banner/galeri/testimoni), mengelola transaksi pesanan, memverifikasi pembayaran, serta mencetak invoice PDF.</li>
+</ol>
+
+<hr style="border: 0; border-top: 1px solid #dddddd; margin: 18pt 0;" />
+
+<h2>2. Pemodelan Use Case Diagram</h2>
+<p>Use Case diagram menggambarkan hubungan dinamis fungsionalitas sistem informasi Berkah Alam dengan aktor-aktor luar sesuai format template vertical stack.</p>
+
+<h3>A. Diagram Use Case (Representasi Struktural)</h3>
+<p>Berikut adalah representasi relasi fungsional sistem informasi:</p>
+
+<pre><code>
+   ┌─────────────────────────────────────────────────────────────┐
+   │                  SISTEM INFORMASI BERKAH ALAM               │
+   ├─────────────────────────────────────────────────────────────┤
+   │  CUSTOMER (Pelanggan)                                       │
+   │   ├── UC-01: Register (Pendaftaran Akun)                    │
+   │   ├── UC-02: Login (Masuk Sistem)                           │
+   │   ├── UC-03: Melakukan Pemesanan                            │
+   │   └── UC-04: Mengecek Status Pesanan                        │
+   ├─────────────────────────────────────────────────────────────┤
+   │  ADMIN (Administrator)                                      │
+   │   ├── UC-02: Login (Masuk Sistem)                           │
+   │   ├── UC-04: Mengecek Status Pesanan                        │
+   │   ├── UC-05: Kelola Data Produk & Kategori                  │
+   │   ├── UC-06: Kelola Konten Halaman                          │
+   │   ├── UC-07: Kelola Transaksi Pesanan                       │
+   │   └── UC-08: Mencetak Invoice PDF                           │
+   └─────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<h3>B. Spesifikasi Use Case (Use Case Specification)</h3>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 10%;">ID</th>
+            <th style="width: 25%;">Nama Use Case</th>
+            <th style="width: 20%;">Aktor</th>
+            <th style="width: 45%;">Deskripsi</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>UC-01</strong></td>
+            <td>Register</td>
+            <td>Customer</td>
+            <td>Pendaftaran akun baru customer dengan menginput data pribadi (nama, email, password, telepon, dan alamat).</td>
+        </tr>
+        <tr>
+            <td><strong>UC-02</strong></td>
+            <td>Login</td>
+            <td>Customer, Admin</td>
+            <td>Proses masuk log sistem menggunakan email dan kata sandi yang terdaftar untuk mengakses area privat.</td>
+        </tr>
+        <tr>
+            <td><strong>UC-03</strong></td>
+            <td>Melakukan Pemesanan</td>
+            <td>Customer</td>
+            <td>Memesan produk batu nisan atau prasasti dengan menentukan kuantitas (qty) dan menulis teks ukiran kustom.</td>
+        </tr>
+        <tr>
+            <td><strong>UC-04</strong></td>
+            <td>Mengecek Status Pesanan</td>
+            <td>Customer, Admin</td>
+            <td>Memantau perkembangan status pemrosesan pesanan, konfirmasi pengerjaan, dan status bukti transfer pembayaran.</td>
+        </tr>
+        <tr>
+            <td><strong>UC-05</strong></td>
+            <td>Kelola Data Produk & Kategori</td>
+            <td>Admin</td>
+            <td>Melakukan manipulasi data master (CRUD) produk batu alam beserta kategori penggolongannya.</td>
+        </tr>
+        <tr>
+            <td><strong>UC-06</strong></td>
+            <td>Kelola Konten Halaman</td>
+            <td>Admin</td>
+            <td>Mengatur tulisan & gambar banner (hero), mengunggah portofolio galeri workshop, serta mengelola ulasan testimoni.</td>
+        </tr>
+        <tr>
+            <td><strong>UC-07</strong></td>
+            <td>Kelola Transaksi Pesanan</td>
+            <td>Admin</td>
+            <td>Memantau seluruh transaksi masuk, mengubah status pemrosesan pesanan, dan memvalidasi/memverifikasi bukti bayar.</td>
+        </tr>
+        <tr>
+            <td><strong>UC-08</strong></td>
+            <td>Mencetak Invoice PDF</td>
+            <td>Admin</td>
+            <td>Menghasilkan dokumen invoice resmi transaksi pembelian customer dalam bentuk berkas PDF untuk diunduh.</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr style="border: 0; border-top: 1px solid #dddddd; margin: 18pt 0;" />
+
+<h2>3. Perancangan Database terstruktur</h2>
+
+<h3>A. Entity Relationship Diagram (ERD)</h3>
+<p>Hubungan logikal antartabel di dalam sistem database Berkah Alam dipetakan secara terstruktur sebagai berikut:</p>
+
+<pre><code>
+    [users] (1) ------ memiliki -------> (N) [pesanan]
+                                                 |
+                                            (1) berelasi
+                                                 |
+                                            (1) memiliki
+                                                 |
+                                                 v
+                                            (1) [pembayaran]
+                                                 |
+    [kategori] (1) ---> (N) [produk] (1) ---> (N) [detail_pesanan] (N) <--- (1) [pesanan]
+</code></pre>
+
+<p><strong>Keterangan Relasi:</strong></p>
+<ul>
+    <li>Satu user dapat melakukan banyak kali pesanan (1:N &rarr; <code>users.id</code> ke <code>pesanan.user_id</code>).</li>
+    <li>Satu kategori menaungi banyak produk batu alam (1:N &rarr; <code>kategori.id</code> ke <code>produk.kategori_id</code>).</li>
+    <li>Satu pesanan dapat memiliki satu kali pembayaran (1:1 &rarr; <code>pesanan.id</code> ke <code>pembayaran.pesanan_id</code>).</li>
+    <li>Hubungan banyak-ke-banyak (*many-to-many*) antara pesanan dan produk difasilitasi oleh tabel perantara <code>detail_pesanan</code> (1:N &rarr; <code>pesanan.id</code> ke <code>detail_pesanan.pesanan_id</code> dan <code>produk.id</code> ke <code>detail_pesanan.produk_id</code>).</li>
+</ul>
+
+<h3>B. Kamus Data (Data Dictionary)</h3>
+
+<h4>1. Tabel <code>users</code> (Data Akun & Profil)</h4>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 25%;">Kolom</th>
+            <th style="width: 25%;">Tipe Data</th>
+            <th style="width: 15%;">Atribut Kunci</th>
+            <th style="width: 35%;">Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Primary Key (AI)</td>
+            <td>ID unik pengguna.</td>
+        </tr>
+        <tr>
+            <td><code>name</code></td>
+            <td>varchar(255)</td>
+            <td>-</td>
+            <td>Nama lengkap pengguna.</td>
+        </tr>
+        <tr>
+            <td><code>email</code></td>
+            <td>varchar(255)</td>
+            <td>Unique Key</td>
+            <td>Email login unik.</td>
+        </tr>
+        <tr>
+            <td><code>password</code></td>
+            <td>varchar(255)</td>
+            <td>-</td>
+            <td>Hash kata sandi (Bcrypt).</td>
+        </tr>
+        <tr>
+            <td><code>role</code></td>
+            <td>varchar(255)</td>
+            <td>-</td>
+            <td>Peran: admin / customer.</td>
+        </tr>
+        <tr>
+            <td><code>phone</code></td>
+            <td>varchar(20)</td>
+            <td>-</td>
+            <td>Nomor telepon.</td>
+        </tr>
+        <tr>
+            <td><code>address</code></td>
+            <td>text</td>
+            <td>-</td>
+            <td>Alamat pengiriman.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h4>2. Tabel <code>kategori</code> (Kategori Produk)</h4>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 25%;">Kolom</th>
+            <th style="width: 25%;">Tipe Data</th>
+            <th style="width: 15%;">Atribut Kunci</th>
+            <th style="width: 35%;">Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Primary Key (AI)</td>
+            <td>ID unik kategori.</td>
+        </tr>
+        <tr>
+            <td><code>nama</code></td>
+            <td>varchar(255)</td>
+            <td>-</td>
+            <td>Nama Kategori (misal: "Batu Nisan").</td>
+        </tr>
+    </tbody>
+</table>
+
+<h4>3. Tabel <code>produk</code> (Data Produk)</h4>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 25%;">Kolom</th>
+            <th style="width: 25%;">Tipe Data</th>
+            <th style="width: 15%;">Atribut Kunci</th>
+            <th style="width: 35%;">Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Primary Key (AI)</td>
+            <td>ID unik produk.</td>
+        </tr>
+        <tr>
+            <td><code>kategori_id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Foreign Key</td>
+            <td>Relasi ke <code>kategori.id</code> (Cascade).</td>
+        </tr>
+        <tr>
+            <td><code>nama</code></td>
+            <td>varchar(255)</td>
+            <td>-</td>
+            <td>Nama produk batu alam.</td>
+        </tr>
+        <tr>
+            <td><code>harga</code></td>
+            <td>decimal(15,2)</td>
+            <td>-</td>
+            <td>Harga produk.</td>
+        </tr>
+        <tr>
+            <td><code>stok</code></td>
+            <td>int(11)</td>
+            <td>-</td>
+            <td>Jumlah persediaan produk.</td>
+        </tr>
+        <tr>
+            <td><code>deskripsi</code></td>
+            <td>text</td>
+            <td>-</td>
+            <td>Spesifikasi/deskripsi produk.</td>
+        </tr>
+        <tr>
+            <td><code>gambar</code></td>
+            <td>varchar(255)</td>
+            <td>-</td>
+            <td>Path file gambar produk.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h4>4. Tabel <code>pesanan</code> (Data Transaksi)</h4>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 25%;">Kolom</th>
+            <th style="width: 25%;">Tipe Data</th>
+            <th style="width: 15%;">Atribut Kunci</th>
+            <th style="width: 35%;">Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Primary Key (AI)</td>
+            <td>ID unik transaksi.</td>
+        </tr>
+        <tr>
+            <td><code>user_id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Foreign Key</td>
+            <td>Relasi ke <code>users.id</code> (Cascade).</td>
+        </tr>
+        <tr>
+            <td><code>tanggal</code></td>
+            <td>date</td>
+            <td>-</td>
+            <td>Tanggal transaksi dibuat.</td>
+        </tr>
+        <tr>
+            <td><code>total</code></td>
+            <td>decimal(15,2)</td>
+            <td>-</td>
+            <td>Total tagihan.</td>
+        </tr>
+        <tr>
+            <td><code>status</code></td>
+            <td>enum(...)</td>
+            <td>-</td>
+            <td>Status: pending, diverifikasi, diproses, selesai, ditolak.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h4>5. Tabel <code>detail_pesanan</code> (Rincian Produk & Ukiran)</h4>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 25%;">Kolom</th>
+            <th style="width: 25%;">Tipe Data</th>
+            <th style="width: 15%;">Atribut Kunci</th>
+            <th style="width: 35%;">Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Primary Key (AI)</td>
+            <td>ID unik detail pesanan.</td>
+        </tr>
+        <tr>
+            <td><code>pesanan_id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Foreign Key</td>
+            <td>Relasi ke <code>pesanan.id</code> (Cascade).</td>
+        </tr>
+        <tr>
+            <td><code>produk_id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Foreign Key</td>
+            <td>Relasi ke <code>produk.id</code> (Cascade).</td>
+        </tr>
+        <tr>
+            <td><code>qty</code></td>
+            <td>int(11)</td>
+            <td>-</td>
+            <td>Kuantitas pembelian.</td>
+        </tr>
+        <tr>
+            <td><code>harga</code></td>
+            <td>decimal(15,2)</td>
+            <td>-</td>
+            <td>Harga beli saat itu.</td>
+        </tr>
+        <tr>
+            <td><code>catatan_ukiran</code></td>
+            <td>text</td>
+            <td>-</td>
+            <td>Kustomisasi teks pahatan (nama, tgl).</td>
+        </tr>
+    </tbody>
+</table>
+
+<h4>6. Tabel <code>pembayaran</code> (Konfirmasi Bukti Transfer)</h4>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 25%;">Kolom</th>
+            <th style="width: 25%;">Tipe Data</th>
+            <th style="width: 15%;">Atribut Kunci</th>
+            <th style="width: 35%;">Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Primary Key (AI)</td>
+            <td>ID unik data pembayaran.</td>
+        </tr>
+        <tr>
+            <td><code>pesanan_id</code></td>
+            <td>bigint(20) unsigned</td>
+            <td>Foreign Key</td>
+            <td>Relasi ke <code>pesanan.id</code> (Cascade).</td>
+        </tr>
+        <tr>
+            <td><code>bukti_pembayaran</code></td>
+            <td>varchar(255)</td>
+            <td>-</td>
+            <td>Path file bukti transfer.</td>
+        </tr>
+        <tr>
+            <td><code>tanggal_bayar</code></td>
+            <td>datetime</td>
+            <td>-</td>
+            <td>Tanggal pembayaran dilakukan.</td>
+        </tr>
+        <tr>
+            <td><code>status</code></td>
+            <td>enum(...)</td>
+            <td>-</td>
+            <td>Status verifikasi: pending, diverifikasi, ditolak.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>C. Tabel Dinamis Landing Page & CMS</h3>
+<ul>
+    <li><strong>hero</strong>: Menyimpan teks judul, subjudul, dan gambar promosi visual yang terletak di banner atas beranda.</li>
+    <li><strong>galeri</strong>: Koleksi gambar-gambar nyata hasil penyelesaian pahat nisan/prasasti milik workshop.</li>
+    <li><strong>testimoni</strong>: Ulasan ulasan bintang 1-5 dan data nama serta foto pengulas kepuasan pembeli.</li>
+</ul>
+
+<hr style="border: 0; border-top: 1px solid #dddddd; margin: 18pt 0;" />
+
+<h2>4. Integritas Hubungan Relasional (Cascade Rules)</h2>
+<p>Dalam meminimalisasi ketidakkonsistenan data pada basis data transaksional kustom, relasi antartabel diatur secara otomatis:</p>
+<ol>
+    <li>Aturan <code>ON DELETE CASCADE</code> diimplementasikan di seluruh kunci tamu (Foreign Key) yang merujuk pada tabel header atau parent.</li>
+    <li>Jika akun customer dihapus, seluruh data <code>pesanan</code> yang pernah dibuat oleh user bersangkutan otomatis terhapus bersih.</li>
+    <li>Jika record <code>pesanan</code> dihapus oleh admin, rincian produk terkait di <code>detail_pesanan</code> dan berkas unggah gambar di <code>pembayaran</code> juga ikut terhapus di tingkat DBMS untuk menghindari data terabaikan (orphaned data).</li>
+</ol>
+
+</body>
+</html>
